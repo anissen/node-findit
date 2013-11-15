@@ -66,7 +66,7 @@ module.exports = function walk (dir, opts, emitter, dstat) {
     return emitter;
     
     function check () {
-        if (-- emitter._pending === 0) finish();
+        if (-- emitter._pending <= 0) finish();
     }
     
     function finish () {
@@ -78,6 +78,7 @@ module.exports = function walk (dir, opts, emitter, dstat) {
         if (emitter._stopped) return;
         emitter._pending --;
         if (err) return check();
+        if (files.length === 0) return check();
         
         files.forEach(function (rfile) {
             emitter._pending ++;
