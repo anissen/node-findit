@@ -8,7 +8,7 @@ module.exports = function walk (dir, opts, emitter, dstat) {
     opts._original = undefined;
     
     if (!emitter) {
-        emitter = new EventEmitter;
+        emitter = new EventEmitter();
         emitter.stop = function () {
             emitter._stopped = true;
             emitter.emit('stop');
@@ -16,7 +16,7 @@ module.exports = function walk (dir, opts, emitter, dstat) {
         emitter._pending = 0;
         emitter._seen = {};
     }
-    emitter._pending ++;
+    emitter._pending++;
     
     if (dstat) {
         var stopped = false;
@@ -25,7 +25,7 @@ module.exports = function walk (dir, opts, emitter, dstat) {
         });
         emitter.emit('path', fdir, dstat);
         if (!stopped) fs.readdir(dir, onreaddir);
-        else check()
+        else check();
     }
     else fs.lstat(dir, function onstat (err, stat) {
         if (emitter._stopped) return;
@@ -54,7 +54,7 @@ module.exports = function walk (dir, opts, emitter, dstat) {
             });
             emitter.emit('path', fdir, stat);
             if (!stopped) fs.readdir(dir, onreaddir);
-            else check()
+            else check();
         }
         else {
             emitter.emit('file', fdir, stat);
@@ -66,7 +66,7 @@ module.exports = function walk (dir, opts, emitter, dstat) {
     return emitter;
     
     function check () {
-        if (-- emitter._pending <= 0) finish();
+        if (--emitter._pending <= 0) finish();
     }
     
     function finish () {
@@ -76,18 +76,18 @@ module.exports = function walk (dir, opts, emitter, dstat) {
     
     function onreaddir (err, files) {
         if (emitter._stopped) return;
-        emitter._pending --;
+        emitter._pending--;
         if (err) return check();
         if (files.length === 0) return check();
         
         files.forEach(function (rfile) {
-            emitter._pending ++;
+            emitter._pending++;
             var file = path.join(fdir, rfile);
             
             fs.lstat(file, function (err, stat) {
                 if (emitter._stopped) return;
-                if (err) check()
-                else onstat(file, stat)
+                if (err) check();
+                else onstat(file, stat);
             });
         });
     }
@@ -114,7 +114,7 @@ module.exports = function walk (dir, opts, emitter, dstat) {
                     if (emitter._stopped) return;
                     if (err) return check();
                     
-                    emitter._pending ++;
+                    emitter._pending++;
                     onstat(file_, stat_, file);
                     check();
                 });
